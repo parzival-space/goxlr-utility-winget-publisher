@@ -1,0 +1,40 @@
+name: Publish Package
+on:
+    schedule:
+        - 0 0 * * *
+    workflow_dispatch:
+        
+jobs:
+    collect:
+        name: Fetch Latest Package Information
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+            - name: Install Dependencies
+              working-directory: ./collector
+              run: |
+                    npm ci
+            - name: Collect Package Information
+              id: information
+              working-directory: ./collector
+              run: |
+                    npm run start
+        outputs: 
+            latestVersion: ${{ steps.information.latestVersion }}
+            installerUrl: ${{ steps.information.installerUrl }}
+            isPublished: ${{ steps.information.latestVersion }}
+    release:
+        name: Release new Version
+        needs: collect
+        if: ${{ needs.collect.isPublished == 'false' }}
+        runs-on: windows-latest
+        steps:
+            - name: Download wingetcreate.exe
+              run: |
+                    iwr https://aka.ms/wingetcreate/latest -OutFile wingetcreate.exe
+            - name: Publish to Community Repository
+              run: |
+                    .\wingetcreate.exe update GoXLR-on-Linux.GoXLR-Utility -s -v ${{ needs.collect.latestVersion }} -u ${{ needs.collect.installerUrl }} -t ${{ secrets.WINGET_PAT }}

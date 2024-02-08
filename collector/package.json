@@ -1,0 +1,29 @@
+{
+  "name": "winget-publisher",
+  "version": "1.0.0",
+  "description": "",
+  "main": "github.js",
+  "type": "module",
+  "scripts": {
+    "start": "node ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/parzival-space/goxlr-utility-winget-publisher.git"
+  },
+  "keywords": [
+    "winget",
+    "goxlr-utility",
+    "github-actions"
+  ],
+  "author": "parzival-space",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/parzival-space/goxlr-utility-winget-publisher/issues"
+  },
+  "homepage": "https://github.com/parzival-space/goxlr-utility-winget-publisher#readme",
+  "dependencies": {
+    "@actions/core": "^1.10.1",
+    "axios": "^1.6.7"
+  }
+}
