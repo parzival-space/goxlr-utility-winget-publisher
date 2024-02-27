@@ -12,6 +12,10 @@ jobs:
     collect:
         name: Fetch Latest Package Information
         runs-on: ubuntu-latest
+        outputs: 
+            latestVersion: ${{ steps.information.latestVersion }}
+            installerUrl: ${{ steps.information.installerUrl }}
+            isPublished: ${{ steps.information.latestVersion }}
         steps:
             - uses: actions/checkout@v4
             - uses: actions/setup-node@v4
@@ -26,14 +30,10 @@ jobs:
               working-directory: ./collector
               run: |
                     npm run start
-        outputs: 
-            latestVersion: ${{ steps.information.latestVersion }}
-            installerUrl: ${{ steps.information.installerUrl }}
-            isPublished: ${{ steps.information.latestVersion }}
     release:
         name: Release new Version
         needs: collect
-        if: ${{ needs.collect.isPublished == 'false' }}
+        if: ${{ needs.collect.isPublished == false }}
         runs-on: windows-latest
         steps:
             - name: Download wingetcreate.exe
