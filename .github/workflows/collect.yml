@@ -33,7 +33,7 @@ jobs:
     release:
         name: Release new Version
         needs: collect
-        if: ${{ needs.collect.outputs.isPublished == 'false' }}
+        if: ${{ needs.collect.outputs.isPublished == false }}
         runs-on: windows-latest
         steps:
             - name: Download wingetcreate.exe
@@ -41,4 +41,7 @@ jobs:
                     iwr https://aka.ms/wingetcreate/latest -OutFile wingetcreate.exe
             - name: Publish to Community Repository
               run: |
+                    echo "Version: ${{ needs.collect.outputs.latestVersion }}"
+                    echo "Published: ${{ needs.collect.outputs.isPublished }}"
+                    echo "URL: ${{ needs.collect.outputs.installerUrl }}"
                     .\wingetcreate.exe update GoXLR-on-Linux.GoXLR-Utility -s -v ${{ needs.collect.outputs.latestVersion }} -u ${{ needs.collect.outputs.installerUrl }} -t ${{ secrets.WINGET_PAT }}
